@@ -1,0 +1,43 @@
+{
+    "faulty": {
+        "lastRepairDateRange": [2000, 2016],
+        "dateOfManufactureRange": [1990, 2008],
+        "brands": {
+            "D": [
+                "D1",
+                "D2",
+                "D3"
+            ],
+            "E": [
+                "E2",
+                "E3"
+            ],
+            "F": [
+                "F1",
+                "F2"
+            ]
+        }
+    },
+    "reliable": {
+        "lastRepairDateRange": [2014, 2021],
+        "dateOfManufactureRange": [2006, 2021],
+        "brands": {
+            "A": [
+                "A1",
+                "A2",
+                "A3"
+            ],
+            "B": [
+                "B1"
+            ],
+            "E": [
+                "E1",
+                "E2"
+            ],
+            "D": [
+                "D1",
+                "D2"
+            ]
+        }
+    }
+}

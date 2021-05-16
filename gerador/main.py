@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import math
 
+from config import MachineConfig
+
 plt.figure(figsize=(1, 1), dpi=80)
 
 # consts
@@ -28,7 +30,7 @@ RATE = int(RATE)
 AMOUNT_OF_TIME = int(AMOUNT_OF_TIME)
 
 report = open("report.csv", "w+")
-report.write("machine,instance,temperature\n")
+report.write("machine,instance,temperature,faulty,lastRepairYear,manufactureYear,brand,model\n")
 
 
 def generate_temp(faulty):
@@ -42,7 +44,7 @@ def generate_temp(faulty):
         scale = 5
     return np.random.normal(center, scale)
 
-def generate_machine_report(machine_id: int, faulty: bool):
+def generate_machine_report(machine_id: int, machineConfig: MachineConfig):
     recorded_temperatures = []
 
     last_temperature = STD_TEMPERATURE
@@ -50,13 +52,13 @@ def generate_machine_report(machine_id: int, faulty: bool):
     open_instance = -1
 
     for t in range(0, AMOUNT_OF_TIME, RATE):
-        temperature = generate_temp(faulty)
+        temperature = generate_temp(machineConfig.faulty)
 
-        if faulty:
+        if machineConfig.faulty:
             pass
             # temperature should stay somewhat the same
         else:
-            temperature = generate_temp(faulty)
+            temperature = generate_temp(machineConfig.faulty)
             if open_instance >= 0:
                 if open_instance == 4: # should be closing now
                     open_instance = -1
@@ -75,7 +77,10 @@ def generate_machine_report(machine_id: int, faulty: bool):
                 # if its not open, temperature should stay somewhat the same
 
         # write information on temperature
-        report.write("%d,%d,%.1f\n" % (machine_id, t, temperature))
+        report.write("%d,%d,%.1f,%s,%d,%d,%s,%s\n" % (machine_id, t, temperature, machineConfig.faulty,
+                                        machineConfig.year_of_last_repair, machineConfig.year_of_manufacture,
+                                        machineConfig.brand, machineConfig.model
+                                        ))
         last_temperature = temperature
         recorded_temperatures.append(temperature)
 
@@ -88,6 +93,7 @@ fig, axs = plt.subplots(math.ceil(AMOUNT_OF_FREEZERS/2), 2)
 
 fig.set_figheight(15)
 fig.set_figwidth(15)
+fig.tight_layout(pad=4.0)
 
 plt.setp(axs, xlim=(0, AMOUNT_OF_TIME), ylim=(-50,-100))
 
@@ -99,11 +105,14 @@ for machine in range(AMOUNT_OF_FREEZERS):
     if faulty:
         AMOUNT_OF_FAULTY_FREEZERS -= 1
 
-    temperatures = generate_machine_report(machine, faulty)
-    axs[row, column].plot(range(0, AMOUNT_OF_TIME, RATE), temperatures)
-    axs[row, column].set_title("Machine %d" % (machine))
+    machineConfig = MachineConfig()
+    machineConfig.generate(faulty)
 
-    # for ax in axs.flat:
-    #     ax.set(xlabel='Time', ylabel='Temperature (ºC)')
+    temperatures = generate_machine_report(machine, machineConfig)
+    axs[row, column].plot(range(0, AMOUNT_OF_TIME, RATE), temperatures)
+    axs[row, column].set_title("Machine %d (%s - %s)" % (machine, machineConfig.brand, machineConfig.model))
+
+    for ax in axs.flat:
+        ax.set(xlabel='Time', ylabel='Temperature (ºC)')
 
     plt.savefig('report.png')
