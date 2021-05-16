@@ -1,4 +1,5 @@
 from random import random, randint
+import numpy as np
 import matplotlib.pyplot as plt
 import math
 
@@ -17,10 +18,11 @@ STD_TEMPERATURE = -80 # In Celsius, standard temperature of the freezer when clo
 STD_TEMPERATURE_OPEN = -50 # In Celsius, temperature to close when its open
 STD_TEMPERATURE_INCREASE = 20 # In Celsius, increase temperature when opening
 
-STD_MAX_TEMPERATURE = STD_TEMPERATURE_OPEN
+STD_MAX_TEMPERATURE_OPEN = STD_TEMPERATURE_OPEN
+STD_MAX_TEMPERATURE_CLOSED = -75
 STD_MIN_TEMPERATURE = -95
 
-OPEN_CHANCE = 1 # in 10000 of chances in opening the freezer
+OPEN_CHANCE = 15 # in 1000 of chances in opening the freezer
 
 RATE = int(RATE)
 AMOUNT_OF_TIME = int(AMOUNT_OF_TIME)
@@ -29,8 +31,16 @@ report = open("report.csv", "w+")
 report.write("machine,instance,temperature\n")
 
 
-def generate_temp():
-    return randint(STD_MIN_TEMPERATURE, STD_MAX_TEMPERATURE - 1) + random()
+def generate_temp(faulty):
+    center = 0
+    scale = 0
+    if faulty:
+        center = (STD_MAX_TEMPERATURE_CLOSED + STD_MIN_TEMPERATURE)/2
+        scale = 3
+    else:
+        center = (STD_MAX_TEMPERATURE_CLOSED + STD_MIN_TEMPERATURE)/2
+        scale = 5
+    return np.random.normal(center, scale)
 
 def generate_machine_report(machine_id: int, faulty: bool):
     recorded_temperatures = []
@@ -40,11 +50,13 @@ def generate_machine_report(machine_id: int, faulty: bool):
     open_instance = -1
 
     for t in range(0, AMOUNT_OF_TIME, RATE):
-        temperature = STD_TEMPERATURE
+        temperature = generate_temp(faulty)
+
         if faulty:
-            temperature = generate_temp()
+            pass
+            # temperature should stay somewhat the same
         else:
-            temperature = generate_temp()
+            temperature = generate_temp(faulty)
             if open_instance >= 0:
                 if open_instance == 4: # should be closing now
                     open_instance = -1
@@ -60,7 +72,7 @@ def generate_machine_report(machine_id: int, faulty: bool):
                 if open_instance >= 0:
                     temperature = last_temperature + STD_TEMPERATURE_INCREASE*random()
 
-                # if its not open, temperature should stay ok
+                # if its not open, temperature should stay somewhat the same
 
         # write information on temperature
         report.write("%d,%d,%.1f\n" % (machine_id, t, temperature))
@@ -76,6 +88,8 @@ fig, axs = plt.subplots(math.ceil(AMOUNT_OF_FREEZERS/2), 2)
 
 fig.set_figheight(15)
 fig.set_figwidth(15)
+
+plt.setp(axs, xlim=(0, AMOUNT_OF_TIME), ylim=(-50,-100))
 
 for machine in range(AMOUNT_OF_FREEZERS):
     row = math.floor(machine/2)
