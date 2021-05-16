@@ -25,5 +25,5 @@ class MachineConfig:
         self.year_of_manufacture = randint(config_json[reliability][DATE_OF_MANUFACTURE][0], config_json[reliability][DATE_OF_MANUFACTURE][1])
         brand_model = choice(list(config_json[reliability][BRANDS].items()))
 
-        self.brand = brand_model[0]
-        self.model = choice(brand_model[1])
+        self.brand = int(brand_model[0])
+        self.model = int(choice(brand_model[1]))

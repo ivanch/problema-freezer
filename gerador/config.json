@@ -1,42 +1,42 @@
 {
     "faulty": {
-        "lastRepairDateRange": [2000, 2016],
-        "dateOfManufactureRange": [1990, 2008],
+        "lastRepairDateRange": [2010, 2021],
+        "dateOfManufactureRange": [2005, 2015],
         "brands": {
-            "D": [
-                "D1",
-                "D2",
-                "D3"
+            "4": [
+                "1",
+                "2",
+                "3"
             ],
-            "E": [
-                "E2",
-                "E3"
+            "5": [
+                "4",
+                "5"
             ],
-            "F": [
-                "F1",
-                "F2"
+            "6": [
+                "6",
+                "7"
             ]
         }
     },
     "reliable": {
-        "lastRepairDateRange": [2014, 2021],
-        "dateOfManufactureRange": [2006, 2021],
+        "lastRepairDateRange": [2015, 2021],
+        "dateOfManufactureRange": [2010, 2021],
         "brands": {
-            "A": [
-                "A1",
-                "A2",
-                "A3"
+            "1": [
+                "10",
+                "20",
+                "30"
             ],
-            "B": [
-                "B1"
+            "2": [
+                "11"
             ],
-            "E": [
-                "E1",
-                "E2"
+            "4": [
+                "1",
+                "2"
             ],
-            "D": [
-                "D1",
-                "D2"
+            "5": [
+                "4",
+                "5"
             ]
         }
     }
