@@ -26,8 +26,12 @@ AMOUNT_OF_TIME = int(AMOUNT_OF_TIME)
 
 class Generator:
 
-    def __init__(self):
-        self.report = open("report.csv", "w+")
+    def __init__(self, file_name = "report.csv"):
+        if not file_name.endswith(".csv"):
+            file_name += ".csv"
+
+        self.file_name = file_name
+        self.report = open(file_name, "w+")
         self.report.write("machine,instance,temperature,faulty,lastRepairYear,manufactureYear,brand,model\n")
 
     def generate_temp(self, faulty):

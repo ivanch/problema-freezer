@@ -5,18 +5,21 @@ import graphviz
 from generator import Generator
 from utils import parse_csv_to_data
 
-AMOUNT_OF_FREEZERS = 50
-AMOUNT_OF_FAULTY_FREEZERS = 25
+AMOUNT_OF_FREEZERS = 200
+AMOUNT_OF_FAULTY_FREEZERS = 100
 
-# gen = Generator()
-# gen.generate_csv(amount_of_freezers = AMOUNT_OF_FREEZERS, amount_of_faulty_freezers = AMOUNT_OF_FAULTY_FREEZERS, plot = True)
+TEST_AMOUNT_OF_FREEZERS = 500
+TEST_AMOUNT_OF_FAULTY_FREEZERS = 250
+
+gen = Generator("report.csv")
+gen.generate_csv(amount_of_freezers = AMOUNT_OF_FREEZERS, amount_of_faulty_freezers = AMOUNT_OF_FAULTY_FREEZERS, plot = True)
 
 clf = tree.DecisionTreeClassifier(criterion="entropy")
 
 X = []
 Y = []
 for freezer in range(AMOUNT_OF_FREEZERS):
-    lx, ly = parse_csv_to_data(freezer)
+    lx, ly = parse_csv_to_data("report.csv", freezer)
     for _x in lx:
         X.append(_x)
     for _y in ly:
@@ -24,10 +27,14 @@ for freezer in range(AMOUNT_OF_FREEZERS):
 
 clf = clf.fit(X, Y)
 
+
+test_gen = Generator("report_test.csv")
+test_gen.generate_csv(amount_of_freezers = TEST_AMOUNT_OF_FREEZERS, amount_of_faulty_freezers = TEST_AMOUNT_OF_FAULTY_FREEZERS, plot = False)
+
 total_guesses = 0
 correct_guesses = 0
-for freezer in range(AMOUNT_OF_FREEZERS):
-    X, Y = parse_csv_to_data(freezer)
+for freezer in range(TEST_AMOUNT_OF_FREEZERS):
+    X, Y = parse_csv_to_data("report_test.csv", freezer)
     Z = clf.predict(X)
 
     total = len(Y)

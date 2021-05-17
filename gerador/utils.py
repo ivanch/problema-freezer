@@ -1,10 +1,10 @@
 import csv
 
-def parse_csv_to_data(freezer_id):
+def parse_csv_to_data(file_name, freezer_id):
     X = []
     Y = []
 
-    csv_reader = csv.reader(open("report.csv", "r"))
+    csv_reader = csv.reader(open(file_name, "r"))
     line_count = 0
     for row in csv_reader:
         line_count += 1
