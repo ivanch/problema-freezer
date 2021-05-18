@@ -15,9 +15,9 @@ AMOUNT_OF_FAULTY_FREEZERS = 100
 TEST_AMOUNT_OF_FREEZERS = 500
 TEST_AMOUNT_OF_FAULTY_FREEZERS = 250
 
-# DECISION TREE (ID3)
+# DECISION TREE (CART)
 
-clf = tree.DecisionTreeClassifier(criterion="entropy")
+clf = tree.DecisionTreeClassifier()
 
 # GENERATE TRAIN DATA
 
