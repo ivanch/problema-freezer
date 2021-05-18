@@ -1,4 +1,5 @@
 import sys
+import os
 
 from cart import CART
 
@@ -15,6 +16,9 @@ TEST_AMOUNT_OF_FAULTY_FREEZERS = 15
 args = sys.argv[1:]
 
 cart = CART()
+
+if not os.path.exists("data"):
+    os.makedirs("data")
 
 def generate_train_data():
     print("Gerando dados de treino...")
