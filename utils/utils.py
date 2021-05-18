@@ -1,4 +1,5 @@
 import csv
+import sys
 
 def parse_csv_to_data(file_name, freezer_id):
     X = []
@@ -20,3 +21,7 @@ def parse_csv_to_data(file_name, freezer_id):
         Y.append(row[3] == 'True')
 
     return X, Y
+
+def program_error(message: str):
+    print(message)
+    sys.exit(0)
