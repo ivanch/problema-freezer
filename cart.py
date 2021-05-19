@@ -5,6 +5,9 @@ from sklearn import tree
 from generator import Generator
 from utils.utils import parse_csv_to_data, program_error
 
+# CONST
+FAULTY_THRESHOLD = 60
+
 class CART:
     def __init__(self):
         self.clf = tree.DecisionTreeClassifier()
@@ -47,21 +50,27 @@ class CART:
 
         self.clf = self.clf.fit(X, Y)
 
+    def analyse_result(self, result: list):
+        sum = 0
+        for r in result:
+            if r:
+                sum += 1
+        return (sum/len(result))*100
+
     def test(self, amount_of_test_freezers):
-        total_guesses = 0
+        total_guesses = amount_of_test_freezers
         correct_guesses = 0
         for freezer in range(amount_of_test_freezers):
             X, Y = parse_csv_to_data("data/report_test.csv", freezer)
             Z = self.clf.predict(X)
 
-            total = len(Y)
-            total_guesses += total
-            right = 0
-            for i in range(total):
-                if Y[i] == Z[i]:
-                    right += 1
-                    correct_guesses += 1
-            print("Predição do aparelho %d está: %d%% correto!" % (freezer, (right/total)*100))
+            probability = self.analyse_result(Z)
+            isFaulty = probability >= FAULTY_THRESHOLD
+
+            print("Probabilidade de falha da máquina %d: %.2f%%." % (freezer, probability))
+
+            if isFaulty == Y[0]:
+                correct_guesses += 1
 
         print("Predição no geral: %d%% correto." % ((correct_guesses/total_guesses)*100))
 
