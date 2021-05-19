@@ -1,7 +1,7 @@
 {
     "faulty": {
-        "lastRepairDateRange": [2010, 2021],
-        "dateOfManufactureRange": [2005, 2015],
+        "lastRepairDateRange": [2015, 2021],
+        "dateOfManufactureRange": [2010, 2015],
         "brands": {
             "4": [
                 "1",
@@ -19,8 +19,8 @@
         }
     },
     "reliable": {
-        "lastRepairDateRange": [2015, 2021],
-        "dateOfManufactureRange": [2010, 2021],
+        "lastRepairDateRange": [2018, 2021],
+        "dateOfManufactureRange": [2010, 2018],
         "brands": {
             "1": [
                 "10",

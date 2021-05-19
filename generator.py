@@ -2,7 +2,7 @@ from random import random, randint
 import numpy as np
 import math
 
-from utils.config import MachineConfig
+from utils.config import *
 
 # consts
 RATE = 2 # 2 temperature reports in 1 minute
@@ -18,8 +18,7 @@ STD_MIN_TEMPERATURE = -95
 OPEN_CHANCE = 2 # in 1000 of chances in opening the freezer
 
 class Generator:
-
-    def __init__(self, file_name = "data/report.csv", amount_of_days = 1):
+    def __init__(self, file_name = "data/report.csv", amount_of_days = 1, is_mock = False):
         if not file_name.endswith(".csv"):
             file_name += ".csv"
 
@@ -29,7 +28,11 @@ class Generator:
 
         self.file_name = file_name
         self.report = open(file_name, "w+")
-        self.report.write("machine,instance,temperature,faulty,lastRepairYear,manufactureYear,brand,model\n")
+
+        if not is_mock:
+            self.report.write("machine,instance,temperature,faulty,lastRepairYear,manufactureYear,brand,model\n")
+        else:
+            self.report.write("instance,temperature,lastRepairYear,manufactureYear\n")
 
     def generate_temp(self, faulty):
         center = 0
@@ -84,13 +87,47 @@ class Generator:
 
         return recorded_temperatures
 
+
+    def generate_mock_machine_report(self, machinmachineConfig: MockMachineConfig):
+        recorded_temperatures = []
+
+        last_temperature = STD_TEMPERATURE
+
+        open_instance = -1
+
+        for t in range(0, self.amount_of_time, RATE):
+            temperature = self.generate_temp(machinmachineConfig.faulty)
+
+            if machinmachineConfig.faulty:
+                pass
+                # temperature should stay somewhat the same
+            else:
+                temperature = self.generate_temp(machinmachineConfig.faulty)
+                if open_instance >= 0:
+                    if open_instance == 4: # should be closing now
+                        open_instance = -1
+                        # temperature should be the standard right after closing
+                    else:
+                        # slightly increase the temperature when its open
+                        open_instance += 1
+                        temperature = last_temperature + STD_TEMPERATURE_INCREASE*random()
+                else:
+                    if randint(1, 1000) <= OPEN_CHANCE:
+                        open_instance = 1
+
+                    if open_instance >= 0:
+                        temperature = last_temperature + STD_TEMPERATURE_INCREASE*random()
+
+                    # if its not open, temperature should stay somewhat the same
+
+            # write information on temperature
+            self.report.write("%d,%.1f,%d,%d\n" % (t, temperature, machinmachineConfig.year_of_last_repair, machinmachineConfig.year_of_manufacture))
+            last_temperature = temperature
+            recorded_temperatures.append(temperature)
+
+        return recorded_temperatures
+
     def generate_csv(self, amount_of_freezers = 10, amount_of_faulty_freezers = 3, plot = False):
-        if amount_of_freezers < 2:
-            print("Its required at least two freezers")
-        if amount_of_faulty_freezers < 1:
-            print("Its required at least 1 faulty freezer")
-
-
         if plot:
             import matplotlib.pyplot as plt
 
@@ -124,3 +161,9 @@ class Generator:
                     ax.set(xlabel='Time', ylabel='Temperature (ºC)')
 
                 plt.savefig('data/report.png')
+
+    def generate_mock_csv(self, is_faulty = True):
+        machineConfig = MachineConfig()
+        machineConfig.generate(is_faulty)
+
+        temperatures = self.generate_mock_machine_report(machineConfig)

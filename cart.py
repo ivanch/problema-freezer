@@ -1,9 +1,10 @@
+import pickle
 import graphviz
 from sklearn.datasets import load_iris
 from sklearn import tree
 
 from generator import Generator
-from utils.utils import parse_csv_to_data, program_error
+from utils.utils import *
 
 # CONST
 FAULTY_THRESHOLD = 60
@@ -42,7 +43,7 @@ class CART:
         X = []
         Y = []
         for freezer in range(amount_of_freezers):
-            lx, ly = parse_csv_to_data("data/report.csv", freezer)
+            lx, ly = parse_csv_to_data_gen("data/report.csv", freezer)
             for _x in lx:
                 X.append(_x)
             for _y in ly:
@@ -57,11 +58,19 @@ class CART:
                 sum += 1
         return (sum/len(result))*100
 
+    def save_tree(self):
+        with open("data/decision-tree.pkl", "wb") as fid:
+            pickle.dump(self.clf, fid)
+
+    def load_tree(self):
+        with open("data/decision-tree.pkl", "rb") as fid:
+            self.clf = pickle.load(fid)
+
     def test(self, amount_of_test_freezers):
         total_guesses = amount_of_test_freezers
         correct_guesses = 0
         for freezer in range(amount_of_test_freezers):
-            X, Y = parse_csv_to_data("data/report_test.csv", freezer)
+            X, Y = parse_csv_to_data_gen("data/report_test.csv", freezer)
             Z = self.clf.predict(X)
 
             probability = self.analyse_result(Z)
@@ -74,11 +83,21 @@ class CART:
 
         print("Predição no geral: %d%% correto." % ((correct_guesses/total_guesses)*100))
 
+    def predict(self, csv_path):
+        X = parse_csv_to_data(csv_path)
+        Z = self.clf.predict(X)
+        probability = self.analyse_result(Z)
+
+        isFaulty = probability >= FAULTY_THRESHOLD
+
+        print("Probabilidade de falha da máquina: %.2f%%." % (probability))
+        print("A máquina é considerada: %s." % ("Defeituosa" if isFaulty else "Confiável"))
+
     def generate_visualization(self):
         # r = tree.export_text(clf, feature_names=["temperature", "lastRepairYear"])#, "manufactureYear", "brand", "model"])
         # print(r)
         dot_data = tree.export_graphviz(self.clf, out_file=None,
-                                            feature_names=["temperature", "lastRepairYear"],
+                                            feature_names=["temperature", "last repair year", "manufacture year"],
                                             class_names=["Reliable", "Faulty"],
                                             filled=True, rounded=True,
                                             special_characters=True)

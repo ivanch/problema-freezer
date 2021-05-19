@@ -1,7 +1,9 @@
 import sys
 import os
 
+from utils.utils import program_error
 from cart import CART
+from generator import Generator
 
 # CONSTS
 
@@ -33,6 +35,7 @@ def train():
     cart.train(AMOUNT_OF_FREEZERS)
     print("Gerando visualização da árvore de decisão...")
     cart.generate_visualization()
+    cart.save_tree()
 
 def test():
     print("Testando árvore de decisão...")
@@ -56,3 +59,23 @@ if "gerar-teste" in args:
 if "treinar" in args:
     train()
     test()
+
+if "mock-faulty" in args:
+    f = args[args.index("mock-faulty") + 1]
+    if os.path.exists(f):
+        gen = Generator(f, is_mock = True)
+        gen.generate_mock_csv(is_faulty=True)
+
+if "mock-reliable" in args:
+    f = args[args.index("mock-reliable") + 1]
+    if os.path.exists(f):
+        gen = Generator(f, is_mock = True)
+        gen.generate_mock_csv(is_faulty=False)
+
+if "predict" in args:
+    file_to_predict = args[args.index("predict") + 1]
+    if os.path.exists("data/decision-tree.pkl"):
+        cart.load_tree()
+        cart.predict(file_to_predict)
+    else:
+        program_error("Gere um modelo antes")
