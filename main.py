@@ -62,15 +62,13 @@ if "train" in args:
 
 if "mock-faulty" in args:
     f = args[args.index("mock-faulty") + 1]
-    if os.path.exists(f):
-        gen = Generator(f, is_mock = True)
-        gen.generate_mock_csv(is_faulty=True)
+    gen = Generator(f, is_mock = True)
+    gen.generate_mock_csv(is_faulty=True)
 
 if "mock-reliable" in args:
     f = args[args.index("mock-reliable") + 1]
-    if os.path.exists(f):
-        gen = Generator(f, is_mock = True)
-        gen.generate_mock_csv(is_faulty=False)
+    gen = Generator(f, is_mock = True)
+    gen.generate_mock_csv(is_faulty=False)
 
 if "predict" in args:
     file_to_predict = args[args.index("predict") + 1]
