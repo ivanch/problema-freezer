@@ -20,9 +20,9 @@ $ python main.py [argumentos]
 |gen-train    |Gera novos dados de treino apenas                       |
 |gen-test     |Gera novos dados de teste apenas                        |
 |train        |Treina e testa a árvore de decisão com os dados gerados |
-|predict      |Verifica se o arquivo `maquina.csv` é defeituoso ou confiável, com base em um treino pré estabelecido                                 |
-|mock-faulty  |Cria um arquivo `maquina.csv` defeituoso                |
-|mock-reliable|Cria um arquivo `maquina.csv` confiável                 |
+|predict `maquina.csv`|Verifica se o arquivo `maquina.csv` é defeituoso ou confiável, com base em um treino pré estabelecido                                 |
+|mock-faulty `maquina.csv`|Cria um arquivo `maquina.csv` defeituoso                |
+|mock-reliable `maquina.csv`|Cria um arquivo `maquina.csv` confiável                 |
 
 * Se nenhum argumento for passado, será executado `gerar` e `treinar`.
 * Valores padrões:
