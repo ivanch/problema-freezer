@@ -1,6 +1,14 @@
 # Problema do Freezer
 
-* Para rodar o programa:
+## Rodar localmente
+
+1. Em primeiro lugar, é necessário possuir o `Python 3.x` e o gerenciador de pacotes `pip` instalado.
+2. Em seguida, para instalar as dependências:
+```console
+$ pip install -r requirements.txt
+```
+
+2. Para rodar o programa, basta utilizar:
 ```console
 $ python main.py [argumentos]
 ```
@@ -8,17 +16,22 @@ $ python main.py [argumentos]
 ### Argumentos disponíveis
 | Nome | Descrição |
 |----|---------|
-|gerar|Gera novos dados de treino e teste|
-|gerar-treino|Gera novos dados de treino apenas|
-|gerar-teste|Gera novos dados de teste apenas |
-|treinar|Treina e testa a árvore de decisão com os dados gerados |
+|gen          |Gera novos dados de treino e teste                      |
+|gen-train    |Gera novos dados de treino apenas                       |
+|gen-test     |Gera novos dados de teste apenas                        |
+|train        |Treina e testa a árvore de decisão com os dados gerados |
+|predict      |Verifica se o arquivo `maquina.csv` é defeituoso ou confiável, com base em um treino pré estabelecido                                 |
+|mock-faulty  |Cria um arquivo `maquina.csv` defeituoso                |
+|mock-reliable|Cria um arquivo `maquina.csv` confiável                 |
 
-* Se nenhum argumento for passado, será executado `gerar`, `treinar`.
+* Se nenhum argumento for passado, será executado `gerar` e `treinar`.
 * Valores padrões:
-    * Treino
+    * Tamanho do conjunto de dados de treino
         * 50 refrigeradores
         * 25 refrigeradores defeituosos
-    * Teste
+    * Tamanho do conjunto de dados de teste
         * 30 refrigeradores
         * 15 refrigeradores defeituosos
     * **Esses valores podem ser alterados em `main.py`**
+* O arquivo de modelo treinado do algoritmo será salvo em `data/decision-tree.pkl`
+* O arquivo de visualização do modelo treinado será salvo em `data/viz.pdf`

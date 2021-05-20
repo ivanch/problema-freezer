@@ -47,16 +47,16 @@ if (len(args) == 0):
     train()
     test()
 
-if "gerar" in args:
+if "gen" in args:
     generate_train_data()
     generate_test_data()
 
-if "gerar-treino" in args:
+if "gen-train" in args:
     generate_train_data()
-if "gerar-teste" in args:
+if "gen-test" in args:
     generate_test_data()
 
-if "treinar" in args:
+if "train" in args:
     train()
     test()
 
